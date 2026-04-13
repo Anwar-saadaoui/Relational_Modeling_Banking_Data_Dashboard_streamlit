@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: financecore_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: financecore_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: financecore_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+
+  python:
+    build: .
+    container_name: financecore_python
+    volumes:
+      - ./scripts:/scripts
+      - ./data:/data
+      - ./.env:/app/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: python /scripts/load_data.py
+
+  streamlit:
+    build: ./streamlit_app
+    container_name: financecore_streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./.env:/app/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
