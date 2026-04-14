@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     agence VARCHAR(100) NOT NULL REFERENCES agencies(agence),
     produit VARCHAR(100) NOT NULL REFERENCES products(produit),
     date_transaction DATE NOT NULL,
-    montant NUMERIC(15,2) NOT NULL CHECK (montant > 0),
+    montant NUMERIC(15,2) NOT NULL,
     devise VARCHAR(10),
     taux_change_eur NUMERIC(10,6),
     montant_eur NUMERIC(15,2),

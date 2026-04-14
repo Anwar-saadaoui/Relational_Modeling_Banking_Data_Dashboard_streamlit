@@ -11,7 +11,9 @@ def show():
     st.markdown('<div class="sub-header">FinanceCore SA — Business Performance Dashboard</div>', unsafe_allow_html=True)
 
     filters = render_filters()
-    where, params = build_where_clause(filters)
+    # where, params = build_where_clause(filters)
+    where = ""
+    params = {}
 
     # ─── Export Button ───────────────────────────────────────────────────────
     export_query = f"""
