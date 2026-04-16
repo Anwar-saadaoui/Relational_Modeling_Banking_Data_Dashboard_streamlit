@@ -1,8 +1,0 @@
-streamlit==1.32.0
-sqlalchemy
-psycopg2-binary
-pandas
-plotly
-seaborn
-matplotlib
-python-dotenv

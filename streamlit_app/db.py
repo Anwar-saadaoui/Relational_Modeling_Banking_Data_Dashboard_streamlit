@@ -23,11 +23,9 @@ def get_engine():
             f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
             pool_pre_ping=True
         )
-        logger.info("✅ Database connection established")
         return engine
     except Exception as e:
-        logger.error(f"❌ Database connection failed: {e}")
-        st.error(f"Database connection failed: {e}")
+        st.error(f"❌ Database connection failed: {e}")
         return None
 
 @st.cache_data(ttl=300)
@@ -37,9 +35,7 @@ def run_query(query: str, params: dict = None) -> pd.DataFrame:
         return pd.DataFrame()
     try:
         with engine.connect() as conn:
-            result = pd.read_sql(text(query), conn, params=params)
-        return result
+            return pd.read_sql(text(query), conn, params=params)
     except Exception as e:
-        logger.error(f"Query error: {e}")
         st.error(f"Query error: {e}")
         return pd.DataFrame()
